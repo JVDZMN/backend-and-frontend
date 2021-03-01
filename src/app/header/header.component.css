@@ -1,0 +1,12 @@
+ul{
+    padding: 0;
+    margin: 2vw;
+    list-style-type: none;
+}
+
+a{
+    color: white;
+}
+.activePage{
+    background-color: steelblue;
+}
