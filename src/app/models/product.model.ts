@@ -1,11 +1,12 @@
-export class post {
+export class product {
     id?:string;
     title?: string;
-    content?: string;
+    description?: string;
     price?:Number
     constructor(){
       this.id=''
       this.title=''
-      this.content=''
+      this.description=''
+      this.price=0
     }
     }

@@ -1,0 +1,86 @@
+"use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
+exports.__esModule = true;
+exports.ProductService = void 0;
+var core_1 = require("@angular/core");
+var rxjs_1 = require("rxjs");
+var operators_1 = require("rxjs/operators");
+var ProductService = /** @class */ (function () {
+    function ProductService(http) {
+        this.http = http;
+        this.products = [];
+        this.productUpdated = new rxjs_1.Subject();
+    }
+    ProductService.prototype.getProducts = function () {
+        var _this = this;
+        this.http.get('http://localhost:3000/api/products')
+            .pipe(operators_1.map(function (productData) {
+            // tslint:disable-next-line:no-shadowed-variable
+            return productData.products.map(function (product) {
+                return {
+                    title: product.title,
+                    description: product.description,
+                    id: product._id,
+                    price: product.price
+                };
+            });
+        }))
+            .subscribe(function (transformedPosts) {
+            _this.products = transformedPosts;
+            _this.productUpdated.next(__spreadArrays(_this.products));
+        });
+    };
+    ProductService.prototype.getProductUpdateListener = function () {
+        return this.productUpdated.asObservable();
+    };
+    ProductService.prototype.addProduct = function (inputProduct) {
+        var _this = this;
+        this.http.post('http://localhost:3000/api/products', inputProduct)
+            .subscribe(function (resData) {
+            var productID = resData.productID;
+            inputProduct.id = productID;
+            _this.products.push(inputProduct);
+            _this.productUpdated.next(__spreadArrays(_this.products));
+        });
+    };
+    ProductService.prototype.deleteProduct = function (productId) {
+        var _this = this;
+        this.http["delete"]('http://localhost:3000/api/products' + productId)
+            .subscribe(function () {
+            var updateProduct = _this.products.filter(function (product) { return product.id !== productId; });
+            _this.products = updateProduct;
+            _this.productUpdated.next(__spreadArrays(_this.products));
+        });
+    };
+    ProductService.prototype.getProduct = function (id) {
+        return __assign({}, this.products.find(function (p) { return p.id === id; }));
+    };
+    ProductService = __decorate([
+        core_1.Injectable({ providedIn: 'root' })
+    ], ProductService);
+    return ProductService;
+}());
+exports.ProductService = ProductService;

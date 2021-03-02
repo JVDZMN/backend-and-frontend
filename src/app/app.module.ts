@@ -20,12 +20,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {HeaderComponent} from './header/header.component'
 import {PostListComponent} from './post/post-list/post-list.component';
 
+//product
+import {ProductListComponent} from './product/product-list/product-list.component';
+import {ProductCreateComponent} from './product/product-create/product-create.component'
+
 @NgModule({
   declarations: [
-    PostCreateComponent,
     AppComponent, 
     HeaderComponent,
-    PostListComponent
+    
+    PostCreateComponent,
+    PostListComponent,
+
+    ProductListComponent,
+    ProductCreateComponent
+    
   ],
   imports: [
     BrowserModule,

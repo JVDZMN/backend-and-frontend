@@ -25,16 +25,21 @@ var post_create_component_1 = require("./post/post-create/post-create.component"
 var animations_1 = require("@angular/platform-browser/animations");
 var header_component_1 = require("./header/header.component");
 var post_list_component_1 = require("./post/post-list/post-list.component");
+//product
+var product_list_component_1 = require("./product/product-list/product-list.component");
+var product_create_component_1 = require("./product/product-create/product-create.component");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         core_1.NgModule({
             declarations: [
-                post_create_component_1.PostCreateComponent,
                 app_component_1.AppComponent,
                 header_component_1.HeaderComponent,
-                post_list_component_1.PostListComponent
+                post_create_component_1.PostCreateComponent,
+                post_list_component_1.PostListComponent,
+                product_list_component_1.ProductListComponent,
+                product_create_component_1.ProductCreateComponent
             ],
             imports: [
                 platform_browser_1.BrowserModule,

@@ -11,9 +11,11 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var post_create_component_1 = require("./post/post-create/post-create.component");
 var post_list_component_1 = require("./post/post-list/post-list.component");
+var product_create_component_1 = require("./product/product-create/product-create.component");
 var routes = [
     { path: '', component: post_list_component_1.PostListComponent },
-    { path: 'create', component: post_create_component_1.PostCreateComponent }
+    { path: 'create', component: post_create_component_1.PostCreateComponent },
+    { path: 'product', component: product_create_component_1.ProductCreateComponent },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
