@@ -2,8 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 var cors = require('cors')
+var fs = require('fs');
+
 
 const Post = require('./models/post');
+const Product = require('./models/product')
 
 const app = express();
 const uri = "mongodb+srv://backendprojectdtu:Backend1234@cluster0.t5ddn.mongodb.net/posts?retryWrites=true&w=majority";
@@ -35,6 +38,24 @@ app.use((req,res,next)=>{
 })
 
 app.use(cors())
+
+
+app.post('/api/products',(req,res,next)=>{
+    const product= new Product({
+        title:req.body.title,
+        description : req.body.description,
+        price:req.body.price,
+    })
+    product.save().then(resault =>{
+        res.status(201).json({
+            message:'product added sucessfully from res',
+            productId:resault._id
+        })
+    }).catch(err =>{
+        console.log(err)
+    })
+    
+})
 
 app.post('/api/posts',(req,res,next)=>{
     const post= new Post({
