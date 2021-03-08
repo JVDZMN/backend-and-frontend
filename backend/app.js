@@ -1,28 +1,43 @@
 const express = require('express');
+const app = express();
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-var cors = require('cors')
-var fs = require('fs');
+const morgan = require('morgan')
+const cors = require('cors')
+const fs = require('fs');
+app.use(cors())
+app.options('*',cors())
 
+//To handle HTTP POST requests(middlewares)
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}))
+app.use(morgan('tiny'))
 
+//models
 const Post = require('./models/post');
 const Product = require('./models/product')
+const Category = require('./models/category')
+const User = require('./models/user')
 
-const app = express();
-const uri = "mongodb+srv://backendprojectdtu:Backend1234@cluster0.t5ddn.mongodb.net/posts?retryWrites=true&w=majority";
+//routers
+const productsRouter=require('./routers/product')
+const categoryRouter = require('./routers/category')
+const userRouter = require('./routers/user')
 
-const dbConnectionString = 'mongodb+srv://javad:8EJmKUw9eJ4wOVWh@cluster0.nuovb.mongodb.net/MEAN?retryWrites=true&w=majority'
+//mongoDB connection string
+const mongoDBuri = "mongodb+srv://backendprojectdtu:Backend1234@cluster0.t5ddn.mongodb.net/ESHOP?retryWrites=true&w=majority";
 
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(mongoDBuri, {useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
     if (err)
        console.error(err);
     else
        console.log("Connected to the mongodb"); 
   });
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:false}))
 
+app.use('/api/products',productsRouter)
+app.use('/api/categories' , categoryRouter)
+app.use('/api/users',userRouter)
 
 
 app.use((req,res,next)=>{
@@ -37,25 +52,7 @@ app.use((req,res,next)=>{
     next();
 })
 
-app.use(cors())
 
-
-app.post('/api/products',(req,res,next)=>{
-    const product= new Product({
-        title:req.body.title,
-        description : req.body.description,
-        price:req.body.price,
-    })
-    product.save().then(resault =>{
-        res.status(201).json({
-            message:'product added sucessfully from res',
-            productId:resault._id
-        })
-    }).catch(err =>{
-        console.log(err)
-    })
-    
-})
 
 app.post('/api/posts',(req,res,next)=>{
     const post= new Post({
@@ -68,9 +65,21 @@ app.post('/api/posts',(req,res,next)=>{
             postId:resault._id
         })
     }).catch(err =>{
+        res.status(500).json({
+            error:err,
+            success:false
+        })
         console.log(err)
     })
     
+})
+
+app.get('/api/users',(req,res)=>{
+    const user={
+        name:'Habib',
+        family:'ali'
+    }
+    res.send(user)
 })
 
 app.get('/api/posts',(req,res,next)=>{
@@ -80,6 +89,7 @@ app.get('/api/posts',(req,res,next)=>{
             ,posts:documents})
             })
 });
+
 
 app.delete('/api/posts:id',(req,res,next)=>{
     Post.deleteOne({_id:req.params.id}).then(resault =>{
